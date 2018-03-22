@@ -1,3 +1,0 @@
-jdbc:sqlserver://tormentanegra:1433;databaseName=efficacis3
-sa
-1234

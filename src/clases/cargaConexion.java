@@ -194,6 +194,9 @@ public class cargaConexion extends javax.swing.JFrame {
                 String url = getURL(port, db);
                 String user = txtUsuario.getText();
                 String pass = txtClave.getText();
+                if (txtbd.getText().isEmpty() && txtUsuario.getText().isEmpty() && txtClave.getText().isEmpty() && txtPort.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Los campos no deben estar vacios","ERROR",JOptionPane.ERROR_MESSAGE);
+            } else {
                 boolean run = escribirInstancia(ruta,url+"\r\n"+user+"\r\n"+pass);
                 if (!run) {
                     JOptionPane.showMessageDialog(null, "problemas al generar el archivo","ERROR",JOptionPane.ERROR_MESSAGE);                    
@@ -202,7 +205,8 @@ public class cargaConexion extends javax.swing.JFrame {
                     this.dispose();
                     interfazPrincipal IP = new interfazPrincipal();
                     IP.setVisible(true);
-                }  
+                    } 
+                }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
         }        
