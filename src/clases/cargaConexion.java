@@ -187,16 +187,16 @@ public class cargaConexion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnprobarConexionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnprobarConexionActionPerformed
-        try {
-                String ruta = "C:\\Users\\"+sql.getUser()+"\\Documents\\NetBeansProjects\\efficacisReport\\config.txt";
-                String db = txtbd.getText();
-                String port = txtPort.getText();
-                String url = getURL(port, db);
-                String user = txtUsuario.getText();
-                String pass = txtClave.getText();
-                if (txtbd.getText().isEmpty() && txtUsuario.getText().isEmpty() && txtClave.getText().isEmpty() && txtPort.getText().isEmpty()) {
+        try {                
+                if (txtbd.getText().isEmpty() || txtUsuario.getText().isEmpty() || txtClave.getText().isEmpty() || txtPort.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Los campos no deben estar vacios","ERROR",JOptionPane.ERROR_MESSAGE);
             } else {
+                    String ruta = "C:\\Users\\"+sql.getUser()+"\\Documents\\NetBeansProjects\\efficacisReport\\config.txt";
+                    String db = txtbd.getText();
+                    String port = txtPort.getText();
+                    String url = getURL(port, db);
+                    String user = txtUsuario.getText();
+                    String pass = txtClave.getText();
                 boolean run = escribirInstancia(ruta,url+"\r\n"+user+"\r\n"+pass);
                 if (!run) {
                     JOptionPane.showMessageDialog(null, "problemas al generar el archivo","ERROR",JOptionPane.ERROR_MESSAGE);                    
