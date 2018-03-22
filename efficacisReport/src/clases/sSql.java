@@ -81,7 +81,7 @@ public class sSql {
         }
         return hostName;
     }
-    //Obtiene el nombre de usuario que inicio sesion en la maquina Ej: ESTFENIX0103
+    //Obtiene el nombre de usuario que inicio sesion en la maquina Ej: USRFENIX0103
     public static String getUser(){
         String user = "";
         try {
