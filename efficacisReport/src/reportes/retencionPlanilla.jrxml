@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="retencionPlanilla" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1f309ac3-c679-4713-b28c-a79294247ed1">
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="2155"/>
+	<property name="ireport.y" value="390"/>
+	<queryString>
+		<![CDATA[SELECT
+T.[RIF AGENTE RETENCION] AS [RIF AGENTE RETENCION]
+,T.[RAZON SOCIAL DEL AGENTE DE RETENCION] AS [RAZON SOCIAL DEL AGENTE DE RETENCION]
+,T.[DIRECCION FISCAL DEL AGENTE DE RETENCION] AS [DIRECCION FISCAL DEL AGENTE DE RETENCION]
+,T.[RAZON SOCIAL DEL SUJETO RETENIDO] AS [RAZON SOCIAL DEL SUJETO RETENIDO]
+,T.[RIF SUJETO RETENIDO] AS [RIF SUJETO RETENIDO]
+,T.[Nro. COMPROBANTE] AS [Nro. COMPROBANTE]
+,T.FECHA AS FECHA
+,T.PERIODO
+,T.[NUMERO DE OPERACION] AS [NUMERO DE OPERACION]
+,T.[FECHA FACTURA] AS [FECHA FACTURA]
+,T.[NUMERO DE CONTROL] AS [NUMERO DE CONTROL]
+,T.[NRO. FACTURA] AS [NRO. FACTURA]
+,SUM(T.[TOTAL COMPRAS INCLUYE IVA] + T.[IMPUESTO IVA]) AS [TOTAL COMPRAS INCLUYE IVA]
+,T.[COMPRAS SIN CREDITO FISCAL] AS [COMPRAS SIN CREDITO FISCAL]
+,SUM(T.[BASE IMPONIBLE]) AS [BASE IMPONIBLE]
+,T.ALICUOTA AS ALICUOTA
+,SUM(T.[IMPUESTO IVA]) AS [IMPUESTO IVA]
+,T.[IVA RETENIDO] AS [IVA RETENIDO]
+,T.[% RETENIDO] AS [% RETENIDO]
+
+FROM(
+select
+NuRIFCia AS [RIF AGENTE RETENCION]
+,Nbcia AS [RAZON SOCIAL DEL AGENTE DE RETENCION]
+,DireccionCia AS [DIRECCION FISCAL DEL AGENTE DE RETENCION]
+,Nbproveedor AS [RAZON SOCIAL DEL SUJETO RETENIDO]
+,NuRIF AS [RIF SUJETO RETENIDO]
+,NuComprob AS [Nro. COMPROBANTE]
+,CONVERT(VARCHAR,dbo.sfAA_FechaSQL(ImCmRetIvaCo.Fecha),105) AS FECHA
+,CONVERT(VARCHAR(7),dbo.sfAA_FechaSQL(FeEmisDoc),111) AS PERIODO
+,Linea AS [NUMERO DE OPERACION]
+,CONVERT(VARCHAR(10),dbo.sfAA_FechaSQL(FeEmisDoc),105) AS [FECHA FACTURA]
+,NuCntrlImpto as [NUMERO DE CONTROL]
+,NuDocComVen as [NRO. FACTURA]
+,MnCosto AS [TOTAL COMPRAS INCLUYE IVA]
+,MnExcentoIVA as [COMPRAS SIN CREDITO FISCAL]
+,MnImptoCompraVenta AS [IMPUESTO IVA]
+,CASE WHEN MnImptoCompraVenta <> 0 THEN  MnCosto ELSE 0 END AS [BASE IMPONIBLE]
+,ImCmRetIvaCoDe.Potarifaimpto AS ALICUOTA
+,MnImptoReten as [IVA RETENIDO]
+,PoRetenido AS [% RETENIDO]
+
+from
+AACompan INNER JOIN
+ImCmRetIvaCo ON ImCmRetIvaCo.Cocia = AACompan.CoCia INNER JOIN 
+ImCmRetIvaCoDe ON ImCmRetIvaCo.Secuencia = ImCmRetIvaCoDe.Secuencia INNER JOIN
+CoMovimi ON CoMovimi.NuRefDocCom = ImCmRetIvaCoDe.NuDocComVen INNER JOIN
+CoProvee ON CoProvee.Coproveedor = CoMovimi.Coproveedor INNER JOIN
+CoDetMov ON CoMovimi.NuMovComp = CoDetMov.NuMovComp
+
+where
+FeEmisDoc BETWEEN 79231 AND 79245
+GROUP BY
+CoDetMov.MnImptoCompraVenta
+,CoDetMov.MnCosto
+,ImCmRetIvaCoDe.Potarifaimpto
+,ImCmRetIvaCoDe.MnImptoReten
+,ImCmRetIvaCoDe.PoRetenido
+,AACompan.Nbcia
+,AACompan.DireccionCia
+,CoProvee.Nbproveedor
+,ImCmRetIvaCoDe.FeEmisDoc
+,ImCmRetIvaCoDe.NuCntrlImpto
+,ImCmRetIvaCoDe.NuDocComVen
+,AACompan.NuRIFCia
+,CoProvee.NuRIF
+,ImCmRetIvaCo.NuComprob
+,ImCmRetIvaCo.Fecha
+,ImCmRetIvaCoDe.Linea
+,ImCmRetIvaCoDe.MnExcentoIVA
+) AS T
+GROUP BY
+T.ALICUOTA
+,T.[IVA RETENIDO]
+,T.[% RETENIDO]
+,T.[RAZON SOCIAL DEL AGENTE DE RETENCION]
+,T.[DIRECCION FISCAL DEL AGENTE DE RETENCION]
+,T.[RAZON SOCIAL DEL SUJETO RETENIDO]
+,T.[FECHA FACTURA]
+,T.[NUMERO DE CONTROL]
+,T.[NRO. FACTURA]
+,T.[RIF AGENTE RETENCION]
+,T.[RIF SUJETO RETENIDO]
+,T.[Nro. COMPROBANTE]
+,T.FECHA
+,T.PERIODO
+,T.[NUMERO DE OPERACION]
+,T.[COMPRAS SIN CREDITO FISCAL]
+ORDER BY
+T.[NUMERO DE OPERACION]]]>
+	</queryString>
+	<field name="RIF AGENTE RETENCION" class="java.lang.String"/>
+	<field name="RAZON SOCIAL DEL AGENTE DE RETENCION" class="java.lang.String"/>
+	<field name="DIRECCION FISCAL DEL AGENTE DE RETENCION" class="java.lang.String"/>
+	<field name="RAZON SOCIAL DEL SUJETO RETENIDO" class="java.lang.String"/>
+	<field name="RIF SUJETO RETENIDO" class="java.lang.String"/>
+	<field name="Nro. COMPROBANTE" class="java.lang.String"/>
+	<field name="FECHA" class="java.lang.String"/>
+	<field name="PERIODO" class="java.lang.String"/>
+	<field name="NUMERO DE OPERACION" class="java.lang.Integer"/>
+	<field name="FECHA FACTURA" class="java.lang.String"/>
+	<field name="NUMERO DE CONTROL" class="java.lang.String"/>
+	<field name="NRO. FACTURA" class="java.lang.String"/>
+	<field name="TOTAL COMPRAS INCLUYE IVA" class="java.math.BigDecimal"/>
+	<field name="COMPRAS SIN CREDITO FISCAL" class="java.math.BigDecimal"/>
+	<field name="BASE IMPONIBLE" class="java.math.BigDecimal"/>
+	<field name="ALICUOTA" class="java.math.BigDecimal"/>
+	<field name="IMPUESTO IVA" class="java.math.BigDecimal"/>
+	<field name="IVA RETENIDO" class="java.math.BigDecimal"/>
+	<field name="% RETENIDO" class="java.math.BigDecimal"/>
+	<variable name="TOTAL COMPRAS INCLUYE IVA_1" class="java.math.BigDecimal" resetType="Group" resetGroup="totales" calculation="Sum">
+		<variableExpression><![CDATA[$F{TOTAL COMPRAS INCLUYE IVA}]]></variableExpression>
+	</variable>
+	<variable name="COMPRAS SIN CREDITO FISCAL_1" class="java.math.BigDecimal" resetType="Group" resetGroup="totales" calculation="Sum">
+		<variableExpression><![CDATA[$F{COMPRAS SIN CREDITO FISCAL}]]></variableExpression>
+	</variable>
+	<variable name="BASE IMPONIBLE_1" class="java.math.BigDecimal" resetType="Group" resetGroup="totales" calculation="Sum">
+		<variableExpression><![CDATA[$F{BASE IMPONIBLE}]]></variableExpression>
+	</variable>
+	<variable name="IMPUESTO IVA_1" class="java.math.BigDecimal" resetType="Group" resetGroup="totales" calculation="Sum">
+		<variableExpression><![CDATA[$F{IMPUESTO IVA}]]></variableExpression>
+	</variable>
+	<variable name="IVA RETENIDO_1" class="java.math.BigDecimal" resetType="Group" resetGroup="totales" calculation="Sum">
+		<variableExpression><![CDATA[$F{IVA RETENIDO}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL COMPRAS INCLUYE IVA_2" class="java.math.BigDecimal" resetType="Group" resetGroup="totales" calculation="Sum">
+		<variableExpression><![CDATA[$F{TOTAL COMPRAS INCLUYE IVA}]]></variableExpression>
+	</variable>
+	<group name="Informacion">
+		<groupFooter>
+			<band height="163">
+				<staticText>
+					<reportElement x="0" y="0" width="73" height="11" uuid="ac540fc5-7d99-4eb3-93e4-734666157653"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[FECHA ENTREGA:]]></text>
+				</staticText>
+				<line>
+					<reportElement x="73" y="11" width="126" height="1" uuid="8aff2e1e-b7ff-4a03-ac18-409a4f572a5a"/>
+				</line>
+				<staticText>
+					<reportElement x="2" y="33" width="382" height="54" uuid="4e84ec17-d7cb-4225-93cb-bb5ac162f137"/>
+					<textElement textAlignment="Justified"/>
+					<text><![CDATA[Ley IVA - Art. 11: "Se designan responsables del pago del impuesto al volor agregado, en caliad de agente de retención, a los contribuyentes a los cuales el Servicio Nacional Integrado de Administración Aduenera y Tributaria (SENIAT) haya calificado como especiales."]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="482" y="33" width="320" height="20" uuid="7e38dd29-6443-4d86-8fb5-3ec9211e3427"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[PROVIDENCIA ADMINISTRATIVA N° SNAT/2013/0030 DEL 20/05/2013]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="2" y="142" width="380" height="20" uuid="93836e21-9952-429b-b82b-dca21f7a4287"/>
+					<textElement textAlignment="Center">
+						<font isBold="true" isStrikeThrough="false"/>
+					</textElement>
+					<text><![CDATA[FIRMA Y SELLO DEL AGENTE DE RETENCION]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="382" y="142" width="419" height="20" uuid="f9837000-ace3-4601-93ce-d5a820aef1d3"/>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[FIRMA Y SELLO DEL SUJETO RETENIDO]]></text>
+				</staticText>
+				<line>
+					<reportElement x="67" y="141" width="264" height="1" uuid="271d212b-22a3-4ed0-ac7a-548c526bed3e"/>
+				</line>
+				<line>
+					<reportElement x="464" y="141" width="264" height="1" uuid="9758d962-d70c-496e-a017-82522a9f5115"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="totales">
+		<groupFooter>
+			<band height="21">
+				<staticText>
+					<reportElement x="226" y="0" width="52" height="21" uuid="2c68e15e-b55b-4724-acff-42d131d26373"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Totales:]]></text>
+				</staticText>
+				<line>
+					<reportElement mode="Opaque" x="231" y="0" width="571" height="1" uuid="a3cd12be-4e7f-4bd3-9d51-b8177b9cc256"/>
+				</line>
+				<elementGroup/>
+				<textField pattern="#,##0.00">
+					<reportElement x="381" y="1" width="100" height="20" uuid="abbef39d-530f-48da-b485-6f9114abdf91"/>
+					<textElement textAlignment="Center">
+						<font size="6" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{COMPRAS SIN CREDITO FISCAL_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="480" y="1" width="100" height="20" uuid="d56f7a75-bd42-4704-a372-0a5ed086a1a7"/>
+					<textElement textAlignment="Center">
+						<font size="6" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{BASE IMPONIBLE_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="616" y="1" width="62" height="20" uuid="aa997969-96c0-4150-8d2c-7c3268389aa7"/>
+					<textElement textAlignment="Center">
+						<font size="6" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{IMPUESTO IVA_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="677" y="1" width="51" height="20" uuid="5c9ccc93-a56b-4529-8088-12e37ad86667"/>
+					<textElement textAlignment="Center">
+						<font size="6" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{IVA RETENIDO_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="282" y="1" width="100" height="20" uuid="86e2454d-f827-432f-b80b-0421f33fcfd2"/>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="6" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL COMPRAS INCLUYE IVA_2}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="20" uuid="f8819f52-55e0-4de4-870f-f045d009b987"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true" isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Comprobante de Retención del Impuesto al Valor Agregado]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="90" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="19" width="251" height="13" uuid="1b7bce5f-a0b4-4e1d-81ba-13de9dad15f4"/>
+				<textFieldExpression><![CDATA[$F{RAZON SOCIAL DEL AGENTE DE RETENCION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="251" y="0" width="275" height="20" uuid="2020ab38-362d-4211-9159-b50b07e68b93"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Registro de Informacion Fiscal del Agente de Retención:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="526" y="0" width="277" height="20" uuid="3ebe168c-a7e9-427e-a63c-8e065e148ba8"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Numero de Comprobante:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="251" height="20" uuid="55c21610-2374-4b64-bf4b-3defa7590bbc"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre o Razón Social del Agente de Retención:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="251" y="19" width="275" height="13" uuid="cd1e66c8-c04e-4009-998f-631edc2eec32"/>
+				<textFieldExpression><![CDATA[$F{RIF AGENTE RETENCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="526" y="19" width="276" height="13" uuid="6141a00e-2be5-40d6-a8be-2424a0a3825e"/>
+				<textFieldExpression><![CDATA[$F{Nro. COMPROBANTE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="32" width="251" height="13" uuid="58ddc2ef-84b1-4672-9c42-690d02b30043"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dirección Fiscal del Agente de Retención:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="525" y="32" width="277" height="13" uuid="89b3f8b7-106f-4dbc-a727-c145fc0ddf58"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="45" width="251" height="13" uuid="4ad45bac-f2d8-43ee-87c4-b364136ac950"/>
+				<textFieldExpression><![CDATA[$F{DIRECCION FISCAL DEL AGENTE DE RETENCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="526" y="45" width="276" height="13" uuid="9acc38be-19f8-4c81-bcc3-a3fd0da0a384"/>
+				<textFieldExpression><![CDATA[$F{FECHA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="58" width="251" height="14" uuid="4b135afa-447b-4356-9ccb-de1ba258bf3a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre o Razón Social del Sujeto Retenido:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="526" y="58" width="276" height="14" uuid="a85e20a4-ecbc-432e-84ee-74552367bb88"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Periodo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="251" y="58" width="275" height="14" uuid="054f634e-e774-4717-bd08-b4548fab1e18"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Registro de Información Fiscal del Sujeto Retenido:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="72" width="251" height="18" uuid="b77aae79-3c6e-444f-b0fe-021776b792c5"/>
+				<textFieldExpression><![CDATA[$F{RAZON SOCIAL DEL SUJETO RETENIDO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="251" y="72" width="275" height="18" uuid="b28cee69-dc5c-490a-8b83-c8ec0e8b1481"/>
+				<textFieldExpression><![CDATA[$F{RIF SUJETO RETENIDO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="526" y="72" width="276" height="18" uuid="c4b427e3-f95f-48bc-888e-b87017f6d2cf"/>
+				<textFieldExpression><![CDATA[$F{PERIODO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="42" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="801" height="42" backcolor="#E6E5E5" uuid="20ac565f-aad1-4b6e-b34c-d4edc2ad5db3"/>
+				<graphicElement>
+					<pen lineWidth="0.0" lineColor="#FFFFFF"/>
+				</graphicElement>
+			</rectangle>
+			<elementGroup>
+				<frame>
+					<reportElement mode="Transparent" x="0" y="0" width="802" height="41" uuid="2217dc07-13f2-4104-a10c-37218caf26ae"/>
+					<staticText>
+						<reportElement x="0" y="0" width="25" height="41" uuid="11094bb9-38aa-418a-b262-d96242489d03"/>
+						<textElement textAlignment="Justified" verticalAlignment="Middle">
+							<font size="6" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Num.
+Oper]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="25" y="0" width="43" height="41" uuid="03035138-77c0-4289-8728-301bd97dd311"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="6" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Fecha
+Documento
+(Fact,ND,NC)]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="67" y="0" width="48" height="41" uuid="e5bfd4de-d71b-43a2-9876-bf6076faa635"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="6" isBold="true"/>
+						</textElement>
+						<text><![CDATA[No. Control
+Documento
+(Fact,ND,NC)]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="114" y="0" width="55" height="41" uuid="5f38b7f5-569a-4467-b165-bcadd433bdcf"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="6" isBold="true"/>
+						</textElement>
+						<text><![CDATA[No.
+Factura]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="168" y="0" width="32" height="41" uuid="5446eba2-58a5-4372-9c88-a415e721af3e"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="6" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Nota de Credito]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="199" y="0" width="32" height="41" uuid="cfdc5501-d69f-4d7b-800d-751a740b73d5"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="6" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Nota de 
+Debito]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="230" y="0" width="53" height="41" uuid="7ef647c0-f90d-4438-9a8e-c835fcf943ba"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="6" isBold="true"/>
+						</textElement>
+						<text><![CDATA[No. Factura
+Afectada]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="282" y="0" width="100" height="41" uuid="b996a9f3-934c-44c0-9dcf-450b394cd62c"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="6" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Total Compras Incluyendo IVA]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="381" y="0" width="100" height="41" uuid="8dccba42-9f01-4440-8228-9ba085833b01"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="6" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Compras Sin Credito Fiscal]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="480" y="0" width="100" height="41" uuid="c83bae1c-c392-45fc-8bb4-cd0b5e723c52"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="6" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Base Imponible]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="580" y="0" width="38" height="41" uuid="d3856b27-0da9-4472-8912-f0b5af69a99e"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="6" isBold="true"/>
+						</textElement>
+						<text><![CDATA[% Alicuota]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="617" y="0" width="62" height="41" uuid="838f7c08-11f1-478c-949c-e7f8e303599a"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="6" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Impuesto IVA]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="678" y="0" width="52" height="41" uuid="d4867767-4c67-4e95-9107-c509bd4c4348"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="6" isBold="true"/>
+						</textElement>
+						<text><![CDATA[IVA Retenido]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="729" y="0" width="73" height="41" uuid="2c098d4b-c801-45c9-bbee-d98c19de2ea4"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="6" isBold="true"/>
+						</textElement>
+						<text><![CDATA[% Retenido]]></text>
+					</staticText>
+				</frame>
+			</elementGroup>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="11" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="25" height="10" uuid="b0b2a267-11fa-4451-bf8f-587146e1275a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUMERO DE OPERACION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="25" y="0" width="43" height="10" uuid="cd64c63f-e756-4126-af7b-60abde8e0c2f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHA FACTURA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="67" y="0" width="48" height="10" uuid="f36201e4-d00d-41fb-9d8b-a51f085000ca"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUMERO DE CONTROL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="114" y="0" width="55" height="10" uuid="826400f7-ed2f-4494-8162-8eca1cf83ff2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NRO. FACTURA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="480" y="0" width="100" height="10" uuid="64fade94-1a9d-46af-a568-65c4c85ef6ae"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BASE IMPONIBLE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="579" y="0" width="38" height="10" uuid="8b1dc3c0-f451-477d-82cf-01e4e5e67573"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ALICUOTA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="616" y="0" width="62" height="10" uuid="01538a55-a097-4de0-a60c-05269e7009a5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{IMPUESTO IVA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="677" y="0" width="52" height="10" uuid="1663d2c3-2b2e-4d5d-bd1e-21af1e8b1339"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{IVA RETENIDO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="728" y="0" width="74" height="10" uuid="9173a73d-c210-4273-aca1-6e5a9705593a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{% RETENIDO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="381" y="0" width="100" height="10" uuid="612fb2a4-34c7-4399-9ee0-70fc603fad2e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COMPRAS SIN CREDITO FISCAL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="282" y="0" width="100" height="10" uuid="c04bca9b-1726-4792-9cae-c9b3f566c23e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL COMPRAS INCLUYE IVA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="2" width="283" height="20" uuid="49e3bc73-3381-44c0-bb22-5c180bd9dcff"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RAZON SOCIAL DEL AGENTE DE RETENCION}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement key="Página" x="786" y="2" width="15" height="20" uuid="bb887920-599f-4c0e-8f1a-a27a84a26a09"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement x="282" y="2" width="200" height="20" uuid="203ca839-d36a-4f5f-91b9-319fca2a57e6"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="750" y="2" width="37" height="20" uuid="8fdc32a4-2f24-451a-a7c1-44ee64287b78"/>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<text><![CDATA[Página]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="802" height="1" uuid="ecd98750-055d-46b5-b4da-3c49bf01c357"/>
+			</line>
+		</band>
+	</pageFooter>
+</jasperReport>
