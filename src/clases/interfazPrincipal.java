@@ -6,6 +6,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -27,13 +28,13 @@ public class interfazPrincipal extends javax.swing.JFrame {
         try{
             UIManager.setLookAndFeel(
             UIManager.getSystemLookAndFeelClassName());
-            SwingUtilities.updateComponentTreeUI(this);
-            cnx.getInstancia();
-        }catch(Exception e){
+            SwingUtilities.updateComponentTreeUI(this);            
+        }catch(ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e){
             JOptionPane.showMessageDialog(null, e.getMessage(),"ERROR",JOptionPane.ERROR_MESSAGE);
         }
         initComponents();
         setLocationRelativeTo(null);
+        cnx.getInstancia();
     }
     
     public boolean estacerrado(Object obj){
