@@ -1,3 +1,3 @@
 jdbc:sqlserver://tormentanegra:1433;databaseName=efficacis3
 sa
-12345
+1234

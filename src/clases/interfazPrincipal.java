@@ -13,8 +13,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  * @author USRFENIX0103
  */
 public class interfazPrincipal extends javax.swing.JFrame {
-    conectar cnx = new conectar();
-    
+    conectar cnx = new conectar();    
     selectorFechaVentas slv;
     selectorFechaRV sfrv;
     retenciones rtn;
@@ -34,7 +33,7 @@ public class interfazPrincipal extends javax.swing.JFrame {
         }
         initComponents();
         setLocationRelativeTo(null);
-        cnx.getInstancia();
+        cnx.getInstancia();        
     }
     
     public boolean estacerrado(Object obj){
@@ -283,6 +282,7 @@ public class interfazPrincipal extends javax.swing.JFrame {
 //        /* Create and display the form */
 //        java.awt.EventQueue.invokeLater(new Runnable() {
 //            public void run() {
+//                cnx.consulta("select * from AACompan");
 //                new interfazPrincipal().setVisible(true);
 //            }
 //        });

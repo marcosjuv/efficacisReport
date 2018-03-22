@@ -48,9 +48,8 @@ public class sSql {
         SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
         fecha = formato.format(catchFecha);
     }
-    
-    public static Object checkConfig(){
-             
+    //verifica que el archivo config.txt exista, caso contrario abrira la ventana de cargar conexion
+    public static Object checkConfig(){             
         try{
             String ruta = "C:\\Users\\"+getUser()+"\\Documents\\NetBeansProjects\\efficacisReport\\config.txt";
             File file = new File(ruta);  
